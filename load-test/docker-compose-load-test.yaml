@@ -1,0 +1,15 @@
+version: "3.7"
+services:
+  master:
+    image: locustio/locust
+    ports:
+      - "7999:8089"
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/test1.py --master -H http://host.docker.internal:8001
+
+  worker:
+    image: locustio/locust
+    volumes:
+      - ./:/mnt/locust
+    command: -f /mnt/locust/test2.py --worker --master-host master
