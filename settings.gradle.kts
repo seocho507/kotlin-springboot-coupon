@@ -1,2 +1,6 @@
 rootProject.name = "coupon"
-include("coupon-core", "coupon-api", "coupon-consumer")
+include(
+    "coupon-core",
+    "coupon-api",
+    "coupon-consumer"
+)
