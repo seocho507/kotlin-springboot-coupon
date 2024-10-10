@@ -16,4 +16,9 @@ class CouponIssueController(
     fun issueCoupon(@RequestBody request: CouponIssueRequest) {
         couponIssueRequestService.issueRequest(request.couponId, request.userId)
     }
+
+    @PostMapping("/issue/async")
+    fun issueCouponRedis(@RequestBody request: CouponIssueRequest) {
+        couponIssueRequestService.issueRequestAsync(request.couponId, request.userId)
+    }
 }

@@ -13,12 +13,19 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-open class CouponIssueServiceImpl(
+class CouponIssueServiceImpl(
     private val couponJpaRepository: CouponJpaRepository,
     private val couponIssueJpaRepository: CouponIssueJpaRepository,
     private val couponIssueRepository: CouponIssueRepository,
     private val applicationEventPublisher: ApplicationEventPublisher
 ) : CouponIssueService {
+
+    @Transactional(readOnly = true)
+    override fun findCoupon(couponId: Long): Coupon {
+        return couponJpaRepository.findById(couponId).orElseThrow {
+            CouponException.CouponNotExistException(couponId)
+        }
+    }
 
     @Transactional
     override fun issueCoupon(
