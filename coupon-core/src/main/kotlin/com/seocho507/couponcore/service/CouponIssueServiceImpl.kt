@@ -9,8 +9,10 @@ import com.seocho507.couponcore.repository.CouponIssueJpaRepository
 import com.seocho507.couponcore.repository.CouponIssueRepository
 import com.seocho507.couponcore.repository.CouponJpaRepository
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+@Service
 open class CouponIssueServiceImpl(
     private val couponJpaRepository: CouponJpaRepository,
     private val couponIssueJpaRepository: CouponIssueJpaRepository,
