@@ -52,7 +52,7 @@ class Coupon(
         }
 
         if (!availableIssueDate()) {
-            throw CouponIssueException.InvalidDateException(LocalDateTime.now(), dateIssueStart, dateIssueEnd)
+            throw CouponIssueException.InvalidDateException(createdAt, dateIssueStart, dateIssueEnd)
         }
 
         issuedQuantity++
