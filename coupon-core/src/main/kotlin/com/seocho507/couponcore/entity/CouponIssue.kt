@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 class CouponIssue(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0,
 
     @Column(nullable = false)
     val couponId: Long,
@@ -16,11 +16,11 @@ class CouponIssue(
     @Column(nullable = false)
     val userId: Long,
 
-    @Column(nullable = false)
-    val dateIssued: LocalDateTime,
+    @Column(nullable = false, updatable = false)
+    val dateIssued: LocalDateTime = LocalDateTime.now(),
 
-    @Column(nullable = false)
-    val dateUsed: LocalDateTime
+    @Column(nullable = true)
+    val dateUsed: LocalDateTime? = null
 ) : BaseTimeEntity() {
 
 }

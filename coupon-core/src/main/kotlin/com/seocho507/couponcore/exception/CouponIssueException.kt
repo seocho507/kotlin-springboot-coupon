@@ -18,4 +18,16 @@ sealed class CouponIssueException(
             CouponErrorCode.INVALID_COUPON_ISSUE_DATE,
             "발급 가능한 일자가 아닙니다. request : $requestDate, issueStart : $issueStart, issueEnd : $issueEnd"
         )
+
+    class DuplicatedCouponIssueException(couponId: Long, userId: Long) :
+        CouponIssueException(
+            CouponErrorCode.DUPLICATED_COUPON_ISSUE,
+            "이미 발급된 쿠폰입니다. couponId : $couponId, userId : $userId"
+        )
+
+    class FailCouponIssueRequestException(couponId: Long, userId: Long) :
+        CouponIssueException(
+            CouponErrorCode.FAIL_COUPON_ISSUE_REQUEST,
+            "쿠폰 발급 요청에 실패했습니다. couponId : $couponId, userId : $userId"
+        )
 }

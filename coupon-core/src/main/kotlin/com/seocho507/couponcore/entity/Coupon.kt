@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 class Coupon(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long,
+    val id: Long = 0,
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
