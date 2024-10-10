@@ -1,10 +1,10 @@
 package com.seocho507.couponcore.entity
 
 import com.seocho507.couponcore.exception.CouponIssueException
-import org.junit.jupiter.api.Assertions.*
+import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import java.time.LocalDateTime
+
 class CouponTest {
 
     private fun createCoupon(
@@ -27,56 +27,65 @@ class CouponTest {
 
     @Test
     fun `쿠폰 발급 가능 수량이 남아 있는 경우 발급이 성공해야 한다`() {
+        // given
         val coupon = createCoupon(totalQuantity = 100, issuedQuantity = 50)
 
-        assertDoesNotThrow {
+        // when & then
+        assertThatCode {
             coupon.issue()
-        }
-        assertEquals(51, coupon.issuedQuantity) // 발급 성공 후 수량이 1 증가
+        }.doesNotThrowAnyException()
+
+        assertThat(coupon.issuedQuantity).isEqualTo(51) // 발급 성공 후 수량이 1 증가 확인
     }
 
     @Test
     fun `쿠폰 발급 가능 수량이 부족하면 예외가 발생해야 한다`() {
+        // given
         val coupon = createCoupon(totalQuantity = 100, issuedQuantity = 100)
 
-        val exception = assertThrows<CouponIssueException.InvalidQuantityException> {
-            coupon.issue()
-        }
+        // when
+        val exception = catchThrowable { coupon.issue() }
 
-        assertEquals("발급 가능한 수량을 초과했습니다. total : 100, issued : 100", exception.message)
+        // then
+        assertThat(exception)
+            .isInstanceOf(CouponIssueException.InvalidQuantityException::class.java)
+            .hasMessage("발급 가능한 수량을 초과했습니다. total : 100, issued : 100")
     }
 
     @Test
     fun `쿠폰 발급 기간 내에 있으면 발급이 성공해야 한다`() {
+        // given
         val coupon = createCoupon(
             dateIssueStart = LocalDateTime.now().minusDays(1),
             dateIssueEnd = LocalDateTime.now().plusDays(1)
         )
 
-        assertDoesNotThrow {
+        // when & then
+        assertThatCode {
             coupon.issue()
-        }
+        }.doesNotThrowAnyException()
     }
 
     @Test
     fun `쿠폰 발급 기간이 지난 경우 예외가 발생해야 한다`() {
+        // given
         val coupon = createCoupon(
             dateIssueStart = LocalDateTime.now().minusDays(10),
             dateIssueEnd = LocalDateTime.now().minusDays(1)
         )
 
-        val exception = assertThrows<CouponIssueException.InvalidDateException> {
-            coupon.issue()
-        }
+        // when
+        val exception = catchThrowable { coupon.issue() }
 
-        assertEquals(
-            "발급 가능한 일자가 아닙니다. request : ${coupon.createdAt}, issueStart : ${coupon.dateIssueStart}, issueEnd : ${coupon.dateIssueEnd}",
-            exception.message
-        )
+        // then
+        assertThat(exception)
+            .isInstanceOf(CouponIssueException.InvalidDateException::class.java)
+            .hasMessage("발급 가능한 일자가 아닙니다. request : ${coupon.createdAt}, issueStart : ${coupon.dateIssueStart}, issueEnd : ${coupon.dateIssueEnd}")
     }
 
     @Test
     fun `발급 완료된 쿠폰은 더 이상 발급할 수 없어야 한다`() {
+        // given
         val coupon = createCoupon(
             totalQuantity = 100,
             issuedQuantity = 100,
@@ -84,11 +93,13 @@ class CouponTest {
             dateIssueEnd = LocalDateTime.now().minusDays(1)
         )
 
-        assertTrue(coupon.isIssueComplete()) // 발급이 완료된 상태여야 함
+        // when & then
+        assertThat(coupon.isIssueComplete()).isTrue() // 발급이 완료된 상태여야 함
     }
 
     @Test
     fun `발급 완료되지 않은 쿠폰은 발급할 수 있어야 한다`() {
+        // given
         val coupon = createCoupon(
             totalQuantity = 100,
             issuedQuantity = 50,
@@ -96,6 +107,7 @@ class CouponTest {
             dateIssueEnd = LocalDateTime.now().plusDays(1)
         )
 
-        assertFalse(coupon.isIssueComplete()) // 발급 완료되지 않았으므로 false
+        // when & then
+        assertThat(coupon.isIssueComplete()).isFalse() // 발급 완료되지 않았으므로 false
     }
 }
