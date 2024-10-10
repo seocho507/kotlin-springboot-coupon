@@ -30,4 +30,8 @@ sealed class CouponIssueException(
             CouponErrorCode.FAIL_COUPON_ISSUE_REQUEST,
             "쿠폰 발급 요청에 실패했습니다. couponId : $couponId, userId : $userId"
         )
+
+    class FailCouponIssueException() :
+        CouponIssueException(CouponErrorCode.FAIL_COUPON_ISSUE_REQUEST, "쿠폰 발급에 실패했습니다.")
+
 }
